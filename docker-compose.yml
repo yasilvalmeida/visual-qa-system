@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: visual-qa-postgres
+    environment:
+      POSTGRES_DB: visual_qa_db
+      POSTGRES_USER: visual_qa_user
+      POSTGRES_PASSWORD: visual_qa_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - visual-qa-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: visual-qa-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - visual-qa-network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  visual-qa-network:
+    driver: bridge 

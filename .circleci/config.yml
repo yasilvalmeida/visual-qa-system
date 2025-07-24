@@ -1,0 +1,111 @@
+version: 2.1
+
+orbs:
+  node: circleci/node@5.1.0
+  docker: circleci/docker@2.4.0
+
+jobs:
+  test-backend:
+    docker:
+      - image: cimg/node:18.17
+      - image: cimg/postgres:15.5
+        environment:
+          POSTGRES_DB: visual_qa_test_db
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_password
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: yarn
+          app-dir: ./backend
+      - run:
+          name: Run backend tests
+          command: |
+            cd backend
+            yarn test
+          app-dir: ./backend
+
+  test-frontend:
+    docker:
+      - image: cimg/node:18.17
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: yarn
+          app-dir: ./frontend
+      - run:
+          name: Run frontend tests
+          command: |
+            cd frontend
+            yarn test --watchAll=false
+          app-dir: ./frontend
+
+  build-backend:
+    docker:
+      - image: cimg/node:18.17
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: yarn
+          app-dir: ./backend
+      - run:
+          name: Build backend
+          command: |
+            cd backend
+            yarn build
+          app-dir: ./backend
+      - persist_to_workspace:
+          root: .
+          paths:
+            - backend/dist
+
+  build-frontend:
+    docker:
+      - image: cimg/node:18.17
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: yarn
+          app-dir: ./frontend
+      - run:
+          name: Build frontend
+          command: |
+            cd frontend
+            yarn build
+          app-dir: ./frontend
+      - persist_to_workspace:
+          root: .
+          paths:
+            - frontend/build
+
+  build-docker:
+    docker:
+      - image: cimg/docker:20.10.24
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - setup_remote_docker
+      - run:
+          name: Build and push Docker images
+          command: |
+            docker build -t visual-qa-backend:latest ./backend
+            docker build -t visual-qa-frontend:latest ./frontend
+            # Add your registry push commands here
+
+workflows:
+  version: 2
+  test-and-build:
+    jobs:
+      - test-backend
+      - test-frontend
+      - build-backend:
+          requires:
+            - test-backend
+      - build-frontend:
+          requires:
+            - test-frontend
+      - build-docker:
+          requires:
+            - build-backend
+            - build-frontend
