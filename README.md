@@ -1,487 +1,358 @@
-# 🎯 Visual QA System (Canvas Inspector)
+# Visual QA System (Canvas Inspector)
 
-[![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
-[![React](https://img.shields.io/badge/React-18.2.0-blue.svg)](https://reactjs.org/)
-[![NestJS](https://img.shields.io/badge/NestJS-10.0.0-red.svg)](https://nestjs.com/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.2.2-blue.svg)](https://www.typescriptlang.org/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15.5-blue.svg)](https://www.postgresql.org/)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![CircleCI](https://img.shields.io/badge/CircleCI-Build%20Status-blue.svg)](https://circleci.com/)
+A comprehensive admin panel for visualizing and reviewing annotations from image datasets. Features interactive canvas manipulation, annotation management, and export capabilities for teams working with labeled image data.
 
-> A comprehensive admin panel for visualizing and reviewing annotations from image datasets with advanced canvas manipulation capabilities.
+---
 
-## 🌟 Features
+## 1. Project Overview
 
-### 🖼️ **Image Management**
+### The Problem
 
-- **Drag & Drop Upload**: Intuitive file upload with progress tracking
-- **Image Processing**: Automatic metadata extraction and thumbnail generation
-- **Batch Operations**: Upload multiple images simultaneously
-- **Search & Filter**: Advanced filtering by name, uploader, and annotation status
+Machine learning teams working with image datasets need tools to review, correct, and manage annotations. Generic image viewers lack annotation overlay capabilities, while specialized tools are often expensive or don't integrate with existing workflows. Teams resort to spreadsheets and separate tools, creating friction in the annotation review process.
 
-### 🎨 **Canvas Inspector**
+### The Solution
 
-- **Interactive Canvas**: Fabric.js powered image manipulation
-- **Zoom & Pan**: Smooth zoom (10% - 300%) and pan operations
-- **Rotation**: 90-degree rotation controls
-- **Real-time Editing**: Edit annotations directly on canvas
-- **Multi-format Support**: JPEG, PNG, GIF, BMP, WebP
+This Visual QA System provides an integrated platform for annotation review. Upload images, view existing annotations overlaid on an interactive canvas, make corrections, and export results—all in one application with multi-user support and comprehensive audit logging.
 
-### 📝 **Annotation System**
+### Why It Matters
 
-- **Multiple Types**: Bounding boxes, polygons, and points
-- **Confidence Scoring**: Color-coded confidence levels (0-100%)
-- **Bulk Operations**: Mass update annotations
-- **Review Workflow**: Mark annotations as reviewed with notes
-- **Export Options**: Include/exclude annotations in exports
+- **Accelerate ML workflows**: Review annotations faster with purpose-built tooling
+- **Improve data quality**: Catch and correct annotation errors before model training
+- **Enable collaboration**: Multiple reviewers work on the same dataset with audit trails
+- **Standardize exports**: Consistent output formats for downstream ML pipelines
+- **Track progress**: Dashboard shows review completion rates and reviewer activity
 
-### 📊 **Analytics Dashboard**
+---
 
-- **Real-time Stats**: Image and annotation statistics
-- **Progress Tracking**: Review completion rates
-- **Activity Logs**: User action tracking
-- **Performance Metrics**: Upload and processing statistics
+## 2. Real-World Use Cases
 
-### 🔐 **Security & Access**
+| Application | How This System Helps |
+|-------------|------------------------|
+| **Object Detection** | Review bounding box annotations for training data quality |
+| **Image Segmentation** | Verify polygon annotations for semantic segmentation datasets |
+| **Medical Imaging** | QA radiologist annotations on diagnostic images |
+| **Autonomous Vehicles** | Review labeled driving scenarios for perception systems |
+| **Document Processing** | Validate OCR region annotations for document AI |
+| **Retail Analytics** | Verify product detection annotations for inventory systems |
 
-- **JWT Authentication**: Secure token-based authentication
-- **Role-based Access**: Admin, Reviewer, and Annotator roles
-- **User Management**: Complete user administration
-- **Event Logging**: Comprehensive audit trail
+---
 
-### 🚀 **Export Capabilities**
+## 3. Core Features
 
-- **PNG Export**: High-quality image export with annotations
-- **PDF Export**: Multi-page PDF generation
-- **Customizable**: Include metadata and annotations
-- **Batch Export**: Export multiple images at once
+| Feature | Business Value |
+|---------|----------------|
+| **Interactive Canvas** | Fabric.js-powered zoom (10%-300%), pan, and rotation controls |
+| **Multi-Format Support** | JPEG, PNG, GIF, BMP, WebP image handling |
+| **Annotation Types** | Bounding boxes, polygons, and point annotations |
+| **Confidence Scoring** | Color-coded confidence levels (0-100%) for prioritized review |
+| **Bulk Operations** | Mass update annotations across multiple images |
+| **Review Workflow** | Mark annotations as reviewed with notes and timestamps |
+| **Export Options** | PNG and multi-page PDF export with configurable options |
+| **User Management** | Role-based access (Admin, Reviewer, Annotator) with JWT auth |
 
-## 🏗️ Architecture
+---
+
+## 4. High-Level Architecture
 
 ```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   React Frontend│    │  NestJS Backend │    │  PostgreSQL DB  │
-│                 │    │                 │    │                 │
-│ • Material UI   │◄──►│ • REST API      │◄──►│ • User Data     │
-│ • Fabric.js     │    │ • JWT Auth      │    │ • Images        │
-│ • React Query   │    │ • File Upload   │    │ • Annotations   │
-│ • Canvas Tools  │    │ • Export Engine │    │ • Event Logs    │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
+┌─────────────────────────────────────────────────────────────────────┐
+│                      Visual QA System                                │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                      │
+│  ┌──────────────────┐    ┌──────────────────┐    ┌───────────────┐  │
+│  │  React Frontend  │    │  NestJS Backend  │    │  PostgreSQL   │  │
+│  │                  │◄──►│                  │◄──►│               │  │
+│  │ • Material UI    │    │ • REST API       │    │ • User Data   │  │
+│  │ • Fabric.js      │    │ • JWT Auth       │    │ • Images      │  │
+│  │ • React Query    │    │ • File Upload    │    │ • Annotations │  │
+│  │ • Canvas Tools   │    │ • Export Engine  │    │ • Event Logs  │  │
+│  └──────────────────┘    └──────────────────┘    └───────────────┘  │
+│           │                       │                       │          │
+│           └───────────────────────┼───────────────────────┘          │
+│                                   │                                  │
+│                    ┌──────────────▼──────────────┐                  │
+│                    │      File Storage           │                  │
+│                    │  (Local or Cloud)           │                  │
+│                    └─────────────────────────────┘                  │
+└─────────────────────────────────────────────────────────────────────┘
 ```
 
-## 🛠️ Tech Stack
+---
 
-### Frontend
+## 5. Tech Stack
 
-- **React 18** - Modern UI framework
-- **TypeScript** - Type-safe development
-- **Material UI** - Professional component library
-- **Fabric.js** - Advanced canvas manipulation
-- **React Query** - Server state management
-- **Zustand** - Client state management
-- **React Router** - Navigation and routing
+| Layer | Technology | Purpose |
+|-------|------------|---------|
+| **Frontend** | React 18, TypeScript | Modern component-based UI |
+| **UI Framework** | Material UI | Professional design system |
+| **Canvas** | Fabric.js | Interactive image manipulation |
+| **State Management** | React Query, Zustand | Server and client state |
+| **Backend** | NestJS, TypeScript | Scalable API framework |
+| **Database** | PostgreSQL, TypeORM | Relational data storage |
+| **Authentication** | JWT, Passport | Secure user authentication |
+| **File Handling** | Multer, Sharp | Upload and image processing |
+| **PDF Generation** | PDF-lib | Export to PDF format |
+| **Infrastructure** | Docker, Nginx | Containerization and serving |
 
-### Backend
+---
 
-- **NestJS** - Scalable Node.js framework
-- **TypeScript** - Type-safe backend development
-- **TypeORM** - Database ORM
-- **PostgreSQL** - Reliable database
-- **JWT** - Authentication and authorization
-- **Multer** - File upload handling
-- **Sharp** - Image processing
-- **PDF-lib** - PDF generation
+## 6. How the System Works
 
-### Infrastructure
+### Image Upload Flow
 
-- **Docker** - Containerization
-- **Docker Compose** - Multi-service orchestration
-- **CircleCI** - Continuous integration
-- **Nginx** - Production web server
+```
+Drag & Drop → Validate → Process → Store → Display
+```
 
-## 📦 Installation
+1. **Upload**: User drags images or clicks to select files
+2. **Validate**: Check file type, size limits (10MB max)
+3. **Process**: Generate thumbnails and extract metadata
+4. **Store**: Save to file storage with database record
+5. **Display**: Show in image grid with upload progress
+
+### Annotation Review Flow
+
+```
+Select Image → Load Canvas → Display Annotations → Review → Save
+```
+
+1. **Select**: Click image from gallery to open in Canvas Inspector
+2. **Load**: Fabric.js canvas initialized with image
+3. **Overlay**: Existing annotations rendered as shapes
+4. **Review**: Zoom, pan, select annotations for review
+5. **Update**: Mark as reviewed, add notes, adjust if needed
+6. **Save**: Changes persisted with audit trail
+
+### Export Flow
+
+```
+Select Images → Configure Options → Generate Export → Download
+```
+
+1. **Select**: Choose images for export (single or batch)
+2. **Configure**: Set format (PNG/PDF), include annotations toggle
+3. **Generate**: Server renders images with annotation overlays
+4. **Package**: Create downloadable file(s)
+5. **Download**: User receives export package
+
+---
+
+## 7. Setup & Run
 
 ### Prerequisites
 
-- **Node.js** 18+ ([Download](https://nodejs.org/))
-- **Yarn** package manager ([Install](https://yarnpkg.com/getting-started/install))
-- **Docker** & **Docker Compose** ([Install](https://docs.docker.com/get-docker/))
-- **Git** ([Download](https://git-scm.com/))
+- Node.js 18+
+- Yarn package manager
+- Docker & Docker Compose
+- PostgreSQL (or use Docker)
 
 ### Quick Start
 
-1. **Clone the repository**
-
-   ```bash
-   git clone https://github.com/yourusername/visual-qa-system.git
-   cd visual-qa-system
-   ```
-
-2. **Run the setup script**
-
-   ```bash
-   ./setup.sh
-   ```
-
-3. **Start the development servers**
-
-   ```bash
-   # Terminal 1: Start backend
-   cd backend && yarn start:dev
-
-   # Terminal 2: Start frontend
-   cd frontend && yarn start
-   ```
-
-4. **Access the application**
-   - 🌐 **Frontend**: http://localhost:3000
-   - 🔧 **Backend API**: http://localhost:3001
-   - 📚 **API Documentation**: http://localhost:3001/api/docs
-
-### Manual Setup
-
-If you prefer manual setup:
-
-1. **Start database services**
-
-   ```bash
-   docker-compose up -d postgres redis
-   ```
-
-2. **Install dependencies**
-
-   ```bash
-   # Backend
-   cd backend
-   yarn install
-   cp env.example .env
-
-   # Frontend
-   cd ../frontend
-   yarn install
-   cp env.example .env
-   ```
-
-3. **Configure environment variables**
-
-   ```bash
-   # Backend (.env)
-   DB_HOST=localhost
-   DB_PORT=5432
-   DB_USERNAME=visual_qa_user
-   DB_PASSWORD=visual_qa_password
-   DB_DATABASE=visual_qa_db
-   JWT_SECRET=your-super-secret-jwt-key
-
-   # Frontend (.env)
-   REACT_APP_API_URL=http://localhost:3001/api
-   ```
-
-4. **Start the application**
-
-   ```bash
-   # Backend
-   cd backend && yarn start:dev
-
-   # Frontend
-   cd frontend && yarn start
-   ```
-
-## 🚀 Usage
-
-### First Time Setup
-
-1. **Register an account** at http://localhost:3000
-2. **Login** with your credentials
-3. **Upload images** using the drag & drop interface
-4. **View images** in the Image Viewer
-5. **Create annotations** using the canvas tools
-6. **Export results** in PNG or PDF format
-
-### Key Features Walkthrough
-
-#### 📤 Image Upload
-
 ```bash
-# Drag & drop images or click to select
-# Supported formats: JPEG, PNG, GIF, BMP, WebP
-# Maximum file size: 10MB per image
+# Clone repository
+git clone https://github.com/your-org/visual-qa-system.git
+cd visual-qa-system
+
+# Run setup script
+./setup.sh
+
+# Or manual setup:
+docker-compose up -d postgres redis
+
+# Install backend
+cd backend && yarn install && cp env.example .env
+
+# Install frontend
+cd ../frontend && yarn install && cp env.example .env
+
+# Start development servers
+cd backend && yarn start:dev    # Terminal 1
+cd frontend && yarn start       # Terminal 2
 ```
 
-#### 🎨 Canvas Operations
+### Environment Configuration
 
-- **Zoom**: Use mouse wheel or zoom buttons
-- **Pan**: Click and drag to move around
-- **Rotate**: Use rotation buttons for 90° increments
-- **Select**: Click on annotations to select them
-
-#### 📝 Annotation Tools
-
-- **Bounding Box**: Draw rectangular selections
-- **Polygon**: Create custom polygon shapes
-- **Point**: Mark specific points of interest
-- **Edit**: Modify existing annotations
-
-#### 📊 Dashboard Analytics
-
-- **Total Images**: Count of uploaded images
-- **Annotation Progress**: Review completion rates
-- **Recent Activity**: Latest user actions
-- **Performance Metrics**: Upload and processing stats
-
-## 🔧 Configuration
-
-### Environment Variables
-
-#### Backend Configuration
-
-```env
-# Database
+```bash
+# Backend (.env)
 DB_HOST=localhost
 DB_PORT=5432
 DB_USERNAME=visual_qa_user
 DB_PASSWORD=visual_qa_password
 DB_DATABASE=visual_qa_db
-
-# JWT
 JWT_SECRET=your-super-secret-jwt-key
 JWT_EXPIRES_IN=24h
-
-# Application
-NODE_ENV=development
-PORT=3001
-FRONTEND_URL=http://localhost:3000
-
-# File Upload
 MAX_FILE_SIZE=10485760
 UPLOAD_PATH=./uploads
-```
 
-#### Frontend Configuration
-
-```env
+# Frontend (.env)
 REACT_APP_API_URL=http://localhost:3001/api
 REACT_APP_NAME=Visual QA System
-REACT_APP_VERSION=1.0.0
 ```
 
-### Database Schema
+### Access Points
 
-The system uses PostgreSQL with the following main tables:
-
-- `users` - User accounts and roles
-- `images` - Image metadata and file information
-- `annotations` - Annotation data and coordinates
-- `event_logs` - User activity tracking
-
-## 🧪 Testing
-
-### Backend Tests
-
-```bash
-cd backend
-yarn test              # Run all tests
-yarn test:watch        # Run tests in watch mode
-yarn test:cov          # Run tests with coverage
-yarn test:e2e          # Run end-to-end tests
-```
-
-### Frontend Tests
-
-```bash
-cd frontend
-yarn test              # Run all tests
-yarn test:watch        # Run tests in watch mode
-yarn test:coverage     # Run tests with coverage
-```
-
-## 🚀 Deployment
-
-### Docker Deployment
-
-1. **Build images**
-
-   ```bash
-   docker-compose build
-   ```
-
-2. **Start services**
-
-   ```bash
-   docker-compose up -d
-   ```
-
-3. **Access the application**
-   - Frontend: http://localhost:3000
-   - Backend: http://localhost:3001
-
-### Production Deployment
-
-1. **Set production environment variables**
-2. **Build production images**
-
-   ```bash
-   docker build -t visual-qa-backend:latest ./backend
-   docker build -t visual-qa-frontend:latest ./frontend
-   ```
-
-3. **Deploy to your preferred platform**
-   - AWS ECS
-   - Google Cloud Run
-   - Azure Container Instances
-   - DigitalOcean App Platform
-
-## 📚 API Documentation
-
-The API documentation is automatically generated using Swagger and available at:
-
-- **Development**: http://localhost:3001/api/docs
-- **Production**: https://your-domain.com/api/docs
-
-### Key Endpoints
-
-```bash
-# Authentication
-POST /api/auth/login
-POST /api/auth/register
-
-# Images
-GET    /api/images
-POST   /api/images
-GET    /api/images/:id
-PATCH  /api/images/:id
-DELETE /api/images/:id
-
-# Annotations
-GET    /api/annotations
-POST   /api/annotations
-GET    /api/annotations/:id
-PATCH  /api/annotations/:id
-DELETE /api/annotations/:id
-
-# Export
-POST /api/export/:imageId
-
-# Users
-GET    /api/users
-GET    /api/users/:id
-PATCH  /api/users/:id
-DELETE /api/users/:id
-
-# Events
-GET /api/events
-GET /api/events/stats
-```
-
-## 🤝 Contributing
-
-We welcome contributions! Please follow these steps:
-
-1. **Fork the repository**
-2. **Create a feature branch**
-   ```bash
-   git checkout -b feature/amazing-feature
-   ```
-3. **Make your changes**
-4. **Add tests** for new functionality
-5. **Commit your changes**
-   ```bash
-   git commit -m 'Add amazing feature'
-   ```
-6. **Push to the branch**
-   ```bash
-   git push origin feature/amazing-feature
-   ```
-7. **Open a Pull Request**
-
-### Development Guidelines
-
-- Follow the existing code style
-- Write meaningful commit messages
-- Add tests for new features
-- Update documentation as needed
-- Ensure all tests pass before submitting
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🆘 Support
-
-### Getting Help
-
-- 📖 **Documentation**: Check the API docs at `/api/docs`
-- 🐛 **Issues**: Report bugs on [GitHub Issues](https://github.com/yourusername/visual-qa-system/issues)
-- 💬 **Discussions**: Join the conversation on [GitHub Discussions](https://github.com/yourusername/visual-qa-system/discussions)
-- 📧 **Email**: Contact us at support@visual-qa-system.com
-
-### Common Issues
-
-#### Database Connection Issues
-
-```bash
-# Check if PostgreSQL is running
-docker-compose ps postgres
-
-# Restart the database
-docker-compose restart postgres
-```
-
-#### File Upload Issues
-
-```bash
-# Check upload directory permissions
-chmod 755 backend/uploads/images
-
-# Verify file size limits
-# Check MAX_FILE_SIZE in .env
-```
-
-#### Canvas Performance Issues
-
-```bash
-# Reduce image quality for better performance
-# Use smaller images for testing
-# Check browser memory usage
-```
-
-## 🙏 Acknowledgments
-
-- **Fabric.js** - Canvas manipulation library
-- **Material UI** - React component library
-- **NestJS** - Progressive Node.js framework
-- **TypeORM** - Database ORM
-- **React Query** - Server state management
-
-## 📈 Roadmap
-
-### Upcoming Features
-
-- [ ] **Real-time Collaboration** - Multi-user editing
-- [ ] **Advanced Drawing Tools** - Freehand drawing, text annotations
-- [ ] **AI Integration** - Automatic annotation suggestions
-- [ ] **Cloud Storage** - AWS S3 integration
-- [ ] **Mobile App** - React Native companion app
-- [ ] **Video Support** - Video annotation capabilities
-- [ ] **Advanced Analytics** - Machine learning insights
-- [ ] **Plugin System** - Extensible architecture
-
-### Version History
-
-- **v1.0.0** - Initial release with core features
-- **v1.1.0** - Enhanced canvas tools and export options
-- **v1.2.0** - User management and role-based access
-- **v1.3.0** - Advanced filtering and search capabilities
+| Service | URL | Description |
+|---------|-----|-------------|
+| **Frontend** | http://localhost:3000 | Web application |
+| **Backend API** | http://localhost:3001 | REST API endpoints |
+| **API Documentation** | http://localhost:3001/api/docs | Swagger UI |
 
 ---
 
-<div align="center">
+## 8. API & Usage
 
-**Made with ❤️ by the Visual QA System Team**
+### Authentication
 
-[![GitHub stars](https://img.shields.io/github/stars/yourusername/visual-qa-system?style=social)](https://github.com/yourusername/visual-qa-system/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/yourusername/visual-qa-system?style=social)](https://github.com/yourusername/visual-qa-system/network)
-[![GitHub issues](https://img.shields.io/github/issues/yourusername/visual-qa-system)](https://github.com/yourusername/visual-qa-system/issues)
-[![GitHub pull requests](https://img.shields.io/github/issues-pr/yourusername/visual-qa-system)](https://github.com/yourusername/visual-qa-system/pulls)
+```bash
+# Register
+curl -X POST http://localhost:3001/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"email": "user@example.com", "password": "secure123", "name": "John Doe"}'
 
-</div>
+# Login
+curl -X POST http://localhost:3001/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "user@example.com", "password": "secure123"}'
+```
+
+### Image Management
+
+```bash
+# Upload image
+curl -X POST http://localhost:3001/api/images \
+  -H "Authorization: Bearer $TOKEN" \
+  -F "file=@image.jpg"
+
+# List images
+curl http://localhost:3001/api/images \
+  -H "Authorization: Bearer $TOKEN"
+
+# Get image with annotations
+curl http://localhost:3001/api/images/123 \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+### Annotation Operations
+
+```bash
+# Create annotation
+curl -X POST http://localhost:3001/api/annotations \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "imageId": 123,
+    "type": "bbox",
+    "coordinates": {"x": 100, "y": 100, "width": 200, "height": 150},
+    "label": "car",
+    "confidence": 0.95
+  }'
+
+# Update annotation (mark reviewed)
+curl -X PATCH http://localhost:3001/api/annotations/456 \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"reviewed": true, "notes": "Verified correct"}'
+```
+
+### Export
+
+```bash
+# Export image with annotations as PNG
+curl -X POST http://localhost:3001/api/export/123 \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"format": "png", "includeAnnotations": true}' \
+  --output exported.png
+```
+
+---
+
+## 9. Scalability & Production Readiness
+
+### Current Architecture Strengths
+
+| Aspect | Implementation |
+|--------|----------------|
+| **Type Safety** | Full TypeScript implementation frontend and backend |
+| **Authentication** | JWT with role-based access control |
+| **Audit Trail** | Comprehensive event logging for all actions |
+| **Container Ready** | Docker Compose for consistent deployment |
+| **API Documentation** | Swagger UI for developer onboarding |
+
+### Production Enhancements (Recommended)
+
+| Enhancement | Purpose |
+|-------------|---------|
+| **Cloud Storage** | AWS S3 or GCS for scalable image storage |
+| **CDN Integration** | CloudFront/CloudFlare for image delivery |
+| **Redis Caching** | Cache frequently accessed images and metadata |
+| **Background Jobs** | Bull queues for async export generation |
+| **Monitoring** | Prometheus/Grafana for system observability |
+| **SSO Integration** | SAML/OIDC for enterprise authentication |
+
+---
+
+## 10. Screenshots & Demo
+
+### Suggested Visuals
+
+- [ ] Image gallery with upload interface
+- [ ] Canvas Inspector with annotation overlays
+- [ ] Annotation properties panel
+- [ ] Review workflow with approval buttons
+- [ ] Export configuration dialog
+- [ ] Dashboard with review progress metrics
+
+---
+
+## Project Structure
+
+```
+visual-qa-system/
+├── frontend/                 # React application
+│   ├── src/
+│   │   ├── components/      # UI components
+│   │   ├── pages/          # Page components
+│   │   ├── hooks/          # Custom hooks
+│   │   ├── services/       # API services
+│   │   └── store/          # State management
+│   └── package.json
+├── backend/                  # NestJS API server
+│   ├── src/
+│   │   ├── auth/           # Authentication module
+│   │   ├── images/         # Image management
+│   │   ├── annotations/    # Annotation CRUD
+│   │   ├── export/         # Export generation
+│   │   ├── users/          # User management
+│   │   └── events/         # Audit logging
+│   └── package.json
+├── docker-compose.yml
+└── README.md
+```
+
+---
+
+## Testing
+
+```bash
+# Backend tests
+cd backend
+yarn test              # Unit tests
+yarn test:e2e          # E2E tests
+yarn test:cov          # Coverage report
+
+# Frontend tests
+cd frontend
+yarn test              # Component tests
+yarn test:coverage     # Coverage report
+```
+
+---
+
+## License
+
+MIT License - see [LICENSE](LICENSE) for details.
+
+---
+
+*Streamlined annotation review for machine learning teams.*
